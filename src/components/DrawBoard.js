@@ -11,16 +11,27 @@ export default class DrawBoard extends React.Component {
     isDrawing: false
   };
 
+  getMousePos = (event) => {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+  }
+
   drawAtPoint = (x, y) => {
-    //ctx.save();
     ctx.fillStyle = `rgba(0,0,0,0.5)`;
     ctx.fillRect(x - 22, y, 5, 5);
-    //ctx.restore();
   }
 
   handleMouseDown = (event) => {
+    const mousePos = this.getMousePos(event);
     console.log('Mouse down');
     this.setState({ isDrawing: true });
+    ctx.strokeStyle = `rgba(0,0,0,0.5)`;
+    ctx.strokeWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(mousePos.x, mousePos.y);
   }
 
   handleMouseUp = (event) => {
@@ -29,9 +40,13 @@ export default class DrawBoard extends React.Component {
   }
 
   handleMouseMove = (event) => {
+    const mousePos = this.getMousePos(event);
     console.log(`(${event.clientX}, ${event.clientY})`);
-    if (this.state.isDrawing)
-      this.drawAtPoint(event.clientX, event.clientY);
+    if (this.state.isDrawing) {
+      ctx.lineTo(mousePos.x, mousePos.y);
+      ctx.stroke();
+    }
+      //this.drawAtPoint(event.clientX, event.clientY);
   }
 
   componentDidMount() {
