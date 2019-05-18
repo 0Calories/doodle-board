@@ -26,7 +26,6 @@ export default class DrawBoard extends React.Component {
 
   handleMouseDown = (event) => {
     const mousePos = this.getMousePos(event);
-    console.log('Mouse down');
     this.setState({ isDrawing: true });
     ctx.strokeStyle = `rgba(0,0,0,0.5)`;
     ctx.strokeWidth = 5;
@@ -35,18 +34,15 @@ export default class DrawBoard extends React.Component {
   }
 
   handleMouseUp = (event) => {
-    console.log('Mouse up');
     this.setState({ isDrawing: false });
   }
 
   handleMouseMove = (event) => {
     const mousePos = this.getMousePos(event);
-    console.log(`(${event.clientX}, ${event.clientY})`);
     if (this.state.isDrawing) {
       ctx.lineTo(mousePos.x, mousePos.y);
       ctx.stroke();
     }
-      //this.drawAtPoint(event.clientX, event.clientY);
   }
 
   componentDidMount() {
