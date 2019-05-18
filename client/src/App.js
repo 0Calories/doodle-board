@@ -10,7 +10,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     // Connect to the server's websocket
-    this.setState({ socket: openSocket('http://localhost:6969') });
+    this.setState({ socket: openSocket('http://192.168.0.24:6969') });
   }
 
   render() {

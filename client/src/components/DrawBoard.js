@@ -41,7 +41,11 @@ export default class DrawBoard extends React.Component {
     this.beginDraw(this.state.brush, mousePos.x, mousePos.y);
 
     // Communicate to the server that a user started drawing a brush stroke
-    this.props.socket.emit('beginDraw', (this.state.brush, mousePos.x, mousePos.y));
+    this.props.socket.emit('beginDraw', {
+      brush: this.state.brush,
+      x: mousePos.x,
+      y: mousePos.y
+    });
   }
 
   handleMouseUp = (event) => {
@@ -70,12 +74,14 @@ export default class DrawBoard extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.socket !== prevProps.socket) {
       // Set up socket receive events here
-      this.props.socket.on('userBeginDraw', () => {
-        console.log('Another user started to draw');
+      this.props.socket.on('userBeginDraw', (packet) => {
+        this.beginDraw(packet.brush, packet.x, packet.y);
+        //console.log('Another user started to draw: ' + packet.brush);
       });
 
-      this.props.socket.on('userDraw', () => {
-        console.log('Another user is drawwing');
+      this.props.socket.on('userDraw', (packet) => {
+        this.draw(packet.x, packet.y);
+        console.log('Another user is drawing');
       });
     }
   }
