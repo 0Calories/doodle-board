@@ -11,6 +11,16 @@ app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
   console.log('New user connected');
+
+  // The packet sent by the client contains a 'brush' object, and an x and y position.
+  socket.on('beginDraw', (packet) => {
+    //socket.broadcast.emit()
+  });
+
+  // The packet sent by the client contains a 'brush' object, and an x and y position.
+  socket.on('draw', (packet) => {
+    console.log(`(${packet.x}, ${packet.y})`);
+  });
 });
 
 server.listen(port, () => {

@@ -8,7 +8,11 @@ export default class DrawBoard extends React.Component {
   state = {
     width: window.innerWidth,
     height: window.innerHeight,
-    isDrawing: false
+    isDrawing: false,
+    brush: {
+      color: `rgba(0,0,0,0.5)`,
+      width: 5
+    }
   };
 
   getMousePos = (event) => {
@@ -31,6 +35,9 @@ export default class DrawBoard extends React.Component {
     ctx.strokeWidth = 5;
     ctx.beginPath();
     ctx.moveTo(mousePos.x, mousePos.y);
+
+    // Communicate to the server that a user started drawing a brush stroke
+    this.props.socket.emit('beginDraw', (this.state.brush, mousePos.x, mousePos.y));
   }
 
   handleMouseUp = (event) => {
@@ -42,6 +49,15 @@ export default class DrawBoard extends React.Component {
     if (this.state.isDrawing) {
       ctx.lineTo(mousePos.x, mousePos.y);
       ctx.stroke();
+
+      // Communicate to the server that a user is currently drawing
+      this.props.socket.emit('draw', {
+        brush: this.state.brush,
+        x: mousePos.x,
+        y: mousePos.y
+      }, (data) => {
+        
+      });
     }
   }
 
