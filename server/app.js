@@ -12,14 +12,14 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  // The packet sent by the client contains a 'brush' object, and an x and y position.
+  // The packet sent by the client contains just an x and y position.
   socket.on('beginDraw', (packet) => {
-    //socket.broadcast.emit()
+    socket.broadcast.emit('userBeginDraw', packet);
   });
 
   // The packet sent by the client contains a 'brush' object, and an x and y position.
   socket.on('draw', (packet) => {
-    console.log(`(${packet.x}, ${packet.y})`);
+    socket.broadcast.emit('userDraw', packet);
   });
 });
 

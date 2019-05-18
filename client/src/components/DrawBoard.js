@@ -23,18 +23,22 @@ export default class DrawBoard extends React.Component {
     };
   }
 
-  drawAtPoint = (x, y) => {
-    ctx.fillStyle = `rgba(0,0,0,0.5)`;
-    ctx.fillRect(x - 22, y, 5, 5);
+  beginDraw = (brush, x, y) => {
+    ctx.strokeStyle = brush.color;
+    ctx.strokeWidth = brush.width;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  }
+
+  draw = (x, y) => {
+    ctx.lineTo(x, y);
+    ctx.stroke();
   }
 
   handleMouseDown = (event) => {
     const mousePos = this.getMousePos(event);
     this.setState({ isDrawing: true });
-    ctx.strokeStyle = `rgba(0,0,0,0.5)`;
-    ctx.strokeWidth = 5;
-    ctx.beginPath();
-    ctx.moveTo(mousePos.x, mousePos.y);
+    this.beginDraw(this.state.brush, mousePos.x, mousePos.y);
 
     // Communicate to the server that a user started drawing a brush stroke
     this.props.socket.emit('beginDraw', (this.state.brush, mousePos.x, mousePos.y));
@@ -45,18 +49,14 @@ export default class DrawBoard extends React.Component {
   }
 
   handleMouseMove = (event) => {
-    const mousePos = this.getMousePos(event);
     if (this.state.isDrawing) {
-      ctx.lineTo(mousePos.x, mousePos.y);
-      ctx.stroke();
+      const mousePos = this.getMousePos(event);
+      this.draw(mousePos.x, mousePos.y)
 
       // Communicate to the server that a user is currently drawing
       this.props.socket.emit('draw', {
-        brush: this.state.brush,
         x: mousePos.x,
         y: mousePos.y
-      }, (data) => {
-        
       });
     }
   }
@@ -64,6 +64,20 @@ export default class DrawBoard extends React.Component {
   componentDidMount() {
     canvas = this.refs.canvas
     ctx = canvas.getContext('2d');
+  }
+
+  // In the case of DrawBoard, this lifecycle method will only be called once the socket object is set in props
+  componentDidUpdate(prevProps) {
+    if (this.props.socket !== prevProps.socket) {
+      // Set up socket receive events here
+      this.props.socket.on('userBeginDraw', () => {
+        console.log('Another user started to draw');
+      });
+
+      this.props.socket.on('userDraw', () => {
+        console.log('Another user is drawwing');
+      });
+    }
   }
 
   render() {
