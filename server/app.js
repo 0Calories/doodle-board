@@ -42,8 +42,12 @@ app.post('/room/create', (req, res) => {
 app.get('/room/:id', (req, res) => {
   const roomId = req.params.id;
   console.log(`User is attempting to join room with ID ${roomId}`);
-  console.log(`The room ${roomStorage.roomExists(roomId) ? 'exists' : 'does not exist'}.`);
-  res.sendStatus(200);
+
+  if (roomStorage.roomExists(roomId)) {
+    res.sendStatus(200);
+  } else {
+    res.status(404).send(`The room with ID ${roomId} does not exist`);
+  }
 });
 
 server.listen(port, () => {
