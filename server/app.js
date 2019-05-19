@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const { generateId } = require('./utils/utils');
 
 const publicPath = path.join(__dirname, './public');
 const port = process.env.PORT || 6969;
@@ -9,6 +10,7 @@ const io = require('socket.io').listen(server);
 
 app.use(express.static(publicPath));
 
+// Sockets
 io.on('connection', (socket) => {
   console.log('New user connected');
 
@@ -21,6 +23,13 @@ io.on('connection', (socket) => {
   socket.on('draw', (packet) => {
     socket.broadcast.emit('userDraw', packet);
   });
+});
+
+// Routes
+app.post('/room/create', (req, res) => {
+  const roomId = generateId();
+  console.log(`Generated new room with ID: ${roomId}`);
+  res.send({ roomId });
 });
 
 server.listen(port, () => {
