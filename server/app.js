@@ -25,11 +25,18 @@ io.on('connection', (socket) => {
   });
 });
 
-// Routes
+// Create room endpoint
 app.post('/room/create', (req, res) => {
   const roomId = generateId();
   console.log(`Generated new room with ID: ${roomId}`);
   res.send({ roomId });
+});
+
+// Join room endpoint
+app.get('/room/:id', (req, res) => {
+  const roomId = req.params.id;
+  console.log(`User is attempting to join room with ID ${roomId}`);
+  res.sendStatus(200);
 });
 
 server.listen(port, () => {
