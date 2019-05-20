@@ -3,6 +3,7 @@ const express = require('express');
 
 const { generateId } = require('./utils/utils');
 const { RoomStorage } = require('./objects/room-storage');
+const { User } = require('./objects/user');
 
 const publicPath = path.join(__dirname, './public');
 const port = process.env.PORT || 6969;
@@ -15,20 +16,30 @@ const roomStorage = new RoomStorage();
 
 app.use(express.static(publicPath));
 
-// Sockets
+/* ========== SOCKET EVENTS ========== */
+
 io.on('connection', (socket) => {
   console.log('New user connected');
 
   // The packet sent by the client contains just an x and y position.
   socket.on('beginDraw', (packet) => {
-    socket.broadcast.emit('userBeginDraw', packet);
+    socket.broadcast.to(packet.roomId).emit('userBeginDraw', packet);
   });
 
   // The packet sent by the client contains a 'brush' object, and an x and y position.
   socket.on('draw', (packet) => {
-    socket.broadcast.emit('userDraw', packet);
+    console.log(packet.roomId);
+    socket.broadcast.to(packet.roomId).emit('userDraw', packet);
+  });
+
+  // The packet sent by the client contains the roomId, and nickname for the user
+  socket.on('joinRoom', (packet) => {
+    socket.join(packet.roomId);
+    //roomStorage.addUserToRoom(new User(socket.id, packet.nickname, packet.roomId));
   });
 });
+
+/* ========== API ENDPOINTS ========== */
 
 // Create room endpoint
 app.post('/room/create', (req, res) => {

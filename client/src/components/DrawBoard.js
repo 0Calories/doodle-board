@@ -6,6 +6,7 @@ let ctx = undefined;
 export default class DrawBoard extends React.Component {
 
   state = {
+    enabled: false,
     width: window.innerWidth,
     height: window.innerHeight,
     isDrawing: false,
@@ -44,7 +45,8 @@ export default class DrawBoard extends React.Component {
     this.props.socket.emit('beginDraw', {
       brush: this.state.brush,
       x: mousePos.x,
-      y: mousePos.y
+      y: mousePos.y,
+      roomId: this.props.roomId
     });
   }
 
@@ -53,14 +55,15 @@ export default class DrawBoard extends React.Component {
   }
 
   handleMouseMove = (event) => {
-    if (this.state.isDrawing) {
+    if (this.state.isDrawing && this.state.enabled) {
       const mousePos = this.getMousePos(event);
       this.draw(mousePos.x, mousePos.y)
 
       // Communicate to the server that a user is currently drawing
       this.props.socket.emit('draw', {
         x: mousePos.x,
-        y: mousePos.y
+        y: mousePos.y,
+        roomId: this.props.roomId
       });
     }
   }
@@ -73,6 +76,7 @@ export default class DrawBoard extends React.Component {
   // In the case of DrawBoard, this lifecycle method will only be called once the socket object is set in props
   componentDidUpdate(prevProps) {
     if (this.props.socket !== prevProps.socket) {
+      this.setState({ enabled: true });
       // Set up socket receive events here
       this.props.socket.on('userBeginDraw', (packet) => {
         this.beginDraw(packet.brush, packet.x, packet.y);

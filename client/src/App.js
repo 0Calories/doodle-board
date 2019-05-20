@@ -21,7 +21,10 @@ export default class App extends React.Component {
 
       if (response.status === 200) {
         // Perform further checks in the future here, i.e room is full
-        this.state.socket.join(roomId);
+        this.state.socket.emit('joinRoom', {
+          roomId,
+          nickname: 'Test'
+        });
       }
     } catch (error) {
       console.log(error);
@@ -50,7 +53,10 @@ export default class App extends React.Component {
           />
           <input type="submit" value="Join" />
         </form>
-        <DrawBoard socket={this.state.socket} />
+        <DrawBoard 
+          socket={this.state.socket} 
+          roomId={this.state.roomId}
+        />
       </div>
     );
   }
