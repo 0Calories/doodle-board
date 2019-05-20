@@ -16,8 +16,13 @@ export default class App extends React.Component {
 
     // Code for joining a Socket.io room here
     try {
-      const response = await axios.get(`http://192.168.0.24:6969/room/${this.state.roomId}`);
-      console.log(response);
+      const roomId = this.state.roomId;
+      const response = await axios.get(`/room/${roomId}`);
+
+      if (response.status === 200) {
+        // Perform further checks in the future here, i.e room is full
+        this.state.socket.join(roomId);
+      }
     } catch (error) {
       console.log(error);
     }
