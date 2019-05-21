@@ -28,14 +28,13 @@ io.on('connection', (socket) => {
 
   // The packet sent by the client contains a 'brush' object, and an x and y position.
   socket.on('draw', (packet) => {
-    console.log(packet.roomId);
     socket.broadcast.to(packet.roomId).emit('userDraw', packet);
   });
 
   // The packet sent by the client contains the roomId, and nickname for the user
   socket.on('joinRoom', (packet) => {
     socket.join(packet.roomId);
-    //roomStorage.addUserToRoom(new User(socket.id, packet.nickname, packet.roomId));
+    roomStorage.addUserToRoom(new User(socket.id, packet.nickname, packet.roomId));
   });
 });
 

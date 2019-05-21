@@ -8,6 +8,12 @@
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.0"
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.0",
+    "supertest": "^4.0.2"
+  },
+  "scripts": {
+    "test": "mocha \"./{,!(node_modules)/**/}*.test.js\""
   }
 }

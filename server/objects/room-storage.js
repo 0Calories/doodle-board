@@ -8,11 +8,15 @@ class RoomStorage {
     this.rooms.push(newRoom);
   }
 
-  roomExists(roomId) { return this.rooms.find((room) => room.roomId === roomId) };
+  roomExists(roomId) { 
+    const roomExists = this.rooms.find((room) => room.roomId === roomId) ? true : false;
+    return roomExists;
+  };
 
   addUserToRoom(user, roomId) {
-    const room = this.rooms.find((room) => room.roomId === roomId);
-    room.userArray.push(user);
+    const room = this.rooms.find((room) => room.roomId === roomId, () => {
+      room.userArray.push(user);
+    });
   }
 
   removeUserFromRoom(user, roomId) {
