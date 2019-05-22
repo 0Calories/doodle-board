@@ -85,7 +85,6 @@ export default class DrawBoard extends React.Component {
 
       this.props.socket.on('userDraw', (packet) => {
         this.draw(packet.x, packet.y);
-        console.log('Another user is drawing');
       });
     }
   }

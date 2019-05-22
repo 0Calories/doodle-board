@@ -1,6 +1,7 @@
 import React from 'react';
 import openSocket from 'socket.io-client';
 import axios from 'axios'
+import Modal from 'react-modal';
 
 import DrawBoard from './components/DrawBoard';
 
@@ -8,7 +9,8 @@ export default class App extends React.Component {
 
   state = {
     socket: undefined,
-    roomId: undefined
+    roomId: undefined,
+    isModalOpen: true
   }
 
   handleJoinRoom = async (event) => {
@@ -25,6 +27,9 @@ export default class App extends React.Component {
           roomId,
           nickname: 'Test'
         });
+
+        // Close the modal 
+        this.setState({ isModalOpen: false });
       }
     } catch (error) {
       console.log(error);
@@ -43,16 +48,24 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <form onSubmit={this.handleJoinRoom}>
-          <label>Room ID:</label>
-          <input 
-            type="text" 
-            name="roomId"
-            value={this.state.roomId}
-            onChange={this.handleChange}
-          />
-          <input type="submit" value="Join" />
-        </form>
+        <Modal
+          isOpen={this.state.isModalOpen}
+          contentLabel="Welcome to Doodleboard!"
+        >
+
+          <form onSubmit={this.handleJoinRoom}>
+            <label>Room ID:</label>
+            <input
+              type="text"
+              name="roomId"
+              value={this.state.roomId}
+              onChange={this.handleChange}
+            />
+            <input type="submit" value="Join" />
+          </form>
+          
+        </Modal>
+
         <DrawBoard 
           socket={this.state.socket} 
           roomId={this.state.roomId}
