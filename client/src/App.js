@@ -4,6 +4,7 @@ import axios from 'axios'
 import WelcomeModal from './components/WelcomeModal/WelcomeModal';
 
 import DrawBoard from './components/DrawBoard/DrawBoard';
+import './styles.scss';
 
 export default class App extends React.Component {
 
@@ -25,7 +26,7 @@ export default class App extends React.Component {
         });
 
         // Close the modal 
-        this.setState({ isModalOpen: false });
+        this.setState({ isModalOpen: false, roomId });
       }
     } catch (error) {
       console.log(error);
@@ -44,6 +45,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
+        <link href="https://fonts.googleapis.com/css?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet" />
         <WelcomeModal 
           handleJoinRoom={this.handleJoinRoom}
           roomId={this.state.roomId}

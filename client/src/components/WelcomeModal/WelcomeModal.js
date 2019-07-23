@@ -25,19 +25,26 @@ export default class WelcomeModal extends React.Component {
         <Modal
             isOpen={this.props.isModalOpen}
             contentLabel="Welcome to Doodleboard!"
+            ariaHideApp={false}
           >
+            <h2 className="modal-header">Welcome!</h2>
             <form onSubmit={this.handleFormSubmit}>
-              <label>Room ID:</label>
+              <label className="room-id-label">Room ID:</label>
               <input
                 type="text"
                 name="roomId"
                 value={this.state.roomId}
                 onChange={this.handleChange}
+                className="room-id-input"
               />
-              <input type="submit" value="Join" />
+              <input 
+                type="submit" 
+                value="Join" 
+                className="join-button"
+              />
             </form>
           </Modal>
         </div>
-    )
+    );
   }
 }

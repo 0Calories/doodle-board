@@ -1,10 +1,20 @@
 .ReactModal__Overlay {
-  width: 50%;
+  background-color: #1a1a1a !important;
+  font-family: 'ZCOOL KuaiLe', cursive;
   margin: 0 auto;
+  width: 50%;
 }
 
 .ReactModal__Content {
   align-self: center;
   display: flex;
   height: 70%;
+}
+
+.room-id-label {
+  
+}
+
+.modal-header {
+  font-size: 4rem;
 }

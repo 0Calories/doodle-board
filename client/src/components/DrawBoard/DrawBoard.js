@@ -80,7 +80,6 @@ export default class DrawBoard extends React.Component {
       // Set up socket receive events here
       this.props.socket.on('userBeginDraw', (packet) => {
         this.beginDraw(packet.brush, packet.x, packet.y);
-        //console.log('Another user started to draw: ' + packet.brush);
       });
 
       this.props.socket.on('userDraw', (packet) => {
